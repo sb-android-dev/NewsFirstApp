@@ -1,4 +1,4 @@
-package com.sbdev.project.newsfirstapp.data.db
+package com.sbdev.project.newsfirstapp.data
 
 sealed class Response<T>(
     val data: T? = null,

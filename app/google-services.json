@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "544321266030",
+    "project_id": "newsfirstapp-af50f",
+    "storage_bucket": "newsfirstapp-af50f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544321266030:android:1c503bcde65d3a37c5617f",
+        "android_client_info": {
+          "package_name": "com.sbdev.project.newsfirstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544321266030-7l22qtd7eei9o4i5fqlj2n1l31l65o12.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtoDKxMstbOpil-Ih93OOS6P939fNE1kA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544321266030-7l22qtd7eei9o4i5fqlj2n1l31l65o12.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
