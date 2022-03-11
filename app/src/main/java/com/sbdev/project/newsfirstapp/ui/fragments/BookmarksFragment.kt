@@ -62,9 +62,9 @@ class BookmarksFragment : Fragment() {
             attachToRecyclerView(binding.rvBookmarkNews)
         }
 
-        viewModel.getSavedArticles().observe(viewLifecycleOwner, Observer {
+        viewModel.getSavedArticles().observe(viewLifecycleOwner) {
             adapter.submitList(it)
-        })
+        }
 
         return binding.root
     }

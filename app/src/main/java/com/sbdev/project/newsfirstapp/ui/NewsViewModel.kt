@@ -6,10 +6,7 @@ import android.net.ConnectivityManager
 import android.net.ConnectivityManager.*
 import android.net.NetworkCapabilities.*
 import android.os.Build
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseUser
 import com.sbdev.project.newsfirstapp.NewsFirstApp
 import com.sbdev.project.newsfirstapp.data.Response
@@ -34,18 +31,15 @@ class NewsViewModel @Inject constructor(
     var searchNewsResponse: NewsResponse? = null
 
     val user = MutableLiveData<FirebaseUser>()
+    val savedArticles = MutableLiveData<List<Article>>()
 
     init {
-        getBreakingNews()
+        searchNews("")
         getCurrentUser()
     }
 
     private fun getCurrentUser(){
         user.value = authRepository.getCurrentUser()
-    }
-
-    private fun getBreakingNews() = viewModelScope.launch {
-        safeBreakingNewsCall("in")
     }
 
     fun searchNews(searchQuery: String) = viewModelScope.launch {
@@ -121,7 +115,7 @@ class NewsViewModel @Inject constructor(
         searchNews.postValue(Response.Loading)
         try {
             if (hasInternetConnection()) {
-                val response = repository.getSearchedNews(searchQuery, "in", searchNewsPage)
+                val response = repository.getSearchedNews(searchQuery, searchNewsPage)
                 searchNews.postValue(handleSearchNewsResponse(response))
             } else {
                 searchNews.postValue(Response.Error("No internet connection"))

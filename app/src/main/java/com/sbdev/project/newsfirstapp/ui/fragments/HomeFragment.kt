@@ -72,6 +72,15 @@ class HomeFragment : Fragment() {
                 is Response.Success -> {
                     hideProgressBar()
                     response.data?.let { newsResponse ->
+                        viewModel.savedArticles.value?.let { saveArticles ->
+                            for(article in newsResponse.articles) {
+                                val a = saveArticles.find { savedArticle ->
+                                    article.url == savedArticle.url
+                                }
+                                article.isBookmarked = a != null
+                            }
+                        }
+
                         adapter.submitList(newsResponse.articles.toList())
 
                         val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2
@@ -155,20 +164,18 @@ class HomeFragment : Fragment() {
 
             override fun onBookmark(item: Article?, position: Int) {
                 item?.let { article ->
-                    if(article.isBookmarked) {
+                    article.isBookmarked = !article.isBookmarked
+                    if(!article.isBookmarked) {
                         viewModel.deleteArticle(article)
                         Snackbar.make(binding.rvSearchNews, "News removed from bookmarks!", Snackbar.LENGTH_SHORT).apply {
-                            anchorView = binding.rvSearchNews
                             show()
                         }
                     } else {
                         viewModel.saveArticle(article)
                         Snackbar.make(binding.rvSearchNews, "News bookmarked!", Snackbar.LENGTH_SHORT).apply {
-                            anchorView = binding.rvSearchNews
                             show()
                         }
                     }
-                    article.isBookmarked = !article.isBookmarked
                     adapter.notifyItemChanged(position)
                 }
             }

@@ -9,7 +9,7 @@ interface NewsRepository {
 
     suspend fun getBreakingNews(countryCode: String, pageNumber: Int): Response<NewsResponse>
 
-    suspend fun getSearchedNews(searchQuery: String, countryCode: String, pageNumber: Int): Response<NewsResponse>
+    suspend fun getSearchedNews(searchQuery: String, pageNumber: Int): Response<NewsResponse>
 
     suspend fun saveArticle(article: Article): Long
 
