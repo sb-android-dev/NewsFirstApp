@@ -18,8 +18,9 @@ class NewsRepositoryImpl @Inject constructor(
 
     override suspend fun getSearchedNews(
         searchQuery: String,
+        countryCode: String,
         pageNumber: Int
-    ): Response<NewsResponse> = RetrofitInstance.api.searchForNews(searchQuery, pageNumber)
+    ): Response<NewsResponse> = RetrofitInstance.api.searchForNews(searchQuery, countryCode, pageNumber)
 
     override suspend fun saveArticle(article: Article): Long = dao.saveArticle(article)
 

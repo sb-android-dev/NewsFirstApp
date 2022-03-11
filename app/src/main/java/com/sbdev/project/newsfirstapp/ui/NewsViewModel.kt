@@ -10,10 +10,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseUser
 import com.sbdev.project.newsfirstapp.NewsFirstApp
 import com.sbdev.project.newsfirstapp.data.Response
 import com.sbdev.project.newsfirstapp.data.entity.Article
 import com.sbdev.project.newsfirstapp.data.entity.NewsResponse
+import com.sbdev.project.newsfirstapp.data.repository.AuthRepository
 import com.sbdev.project.newsfirstapp.data.repository.NewsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewsViewModel @Inject constructor(
     app: Application,
+    private val authRepository: AuthRepository,
     private val repository: NewsRepository
 ) : AndroidViewModel(app) {
 
@@ -30,12 +33,19 @@ class NewsViewModel @Inject constructor(
     var searchNewsPage = 1
     var searchNewsResponse: NewsResponse? = null
 
+    val user = MutableLiveData<FirebaseUser>()
+
     init {
-        getBreakingNews("in")
+        getBreakingNews()
+        getCurrentUser()
     }
 
-    fun getBreakingNews(countryCode: String) = viewModelScope.launch {
-        safeBreakingNewsCall(countryCode)
+    private fun getCurrentUser(){
+        user.value = authRepository.getCurrentUser()
+    }
+
+    private fun getBreakingNews() = viewModelScope.launch {
+        safeBreakingNewsCall("in")
     }
 
     fun searchNews(searchQuery: String) = viewModelScope.launch {
@@ -91,7 +101,7 @@ class NewsViewModel @Inject constructor(
     fun getSavedArticles() = repository.getSavedArticles().asLiveData()
 
     private suspend fun safeBreakingNewsCall(countryCode: String) {
-        searchNews.postValue(Response.Loading())
+        searchNews.postValue(Response.Loading)
         try {
             if (hasInternetConnection()) {
                 val response = repository.getBreakingNews(countryCode, searchNewsPage)
@@ -108,10 +118,10 @@ class NewsViewModel @Inject constructor(
     }
 
     private suspend fun safeSearchNewsCall(searchQuery: String) {
-        searchNews.postValue(Response.Loading())
+        searchNews.postValue(Response.Loading)
         try {
             if (hasInternetConnection()) {
-                val response = repository.getSearchedNews(searchQuery, searchNewsPage)
+                val response = repository.getSearchedNews(searchQuery, "in", searchNewsPage)
                 searchNews.postValue(handleSearchNewsResponse(response))
             } else {
                 searchNews.postValue(Response.Error("No internet connection"))

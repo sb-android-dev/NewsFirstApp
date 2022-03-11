@@ -1,6 +1,8 @@
 package com.sbdev.project.newsfirstapp.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.sbdev.project.newsfirstapp.Constants.Companion.QUERY_PAGE_SIZE
 import com.sbdev.project.newsfirstapp.Constants.Companion.SEARCH_NEWS_TIME_DELAY
 import com.sbdev.project.newsfirstapp.R
@@ -21,6 +24,7 @@ import com.sbdev.project.newsfirstapp.data.Response
 import com.sbdev.project.newsfirstapp.data.entity.Article
 import com.sbdev.project.newsfirstapp.databinding.FragmentHomeBinding
 import com.sbdev.project.newsfirstapp.ui.MainActivity
+import com.sbdev.project.newsfirstapp.ui.NewsDetail
 import com.sbdev.project.newsfirstapp.ui.NewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.WithFragmentBindings
@@ -47,11 +51,9 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         viewModel = (activity as MainActivity).viewModel
-
         setupRecyclerView()
 
         var job: Job? = null
-
         binding.etSearch.addTextChangedListener { editable ->
             job?.cancel()
             job = MainScope().launch {
@@ -65,7 +67,7 @@ class HomeFragment : Fragment() {
             }
         }
 
-        viewModel.searchNews.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.searchNews.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Response.Success -> {
                     hideProgressBar()
@@ -75,22 +77,23 @@ class HomeFragment : Fragment() {
                         val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2
                         isLastPage = viewModel.searchNewsPage == totalPages
 
-//                        if(isLastPage){
-//                            binding.rvSearchNews.setPadding(0, 0, 0, 0)
-//                        }
+                        if(isLastPage){
+                            binding.rvSearchNews.setPadding(0, 0, 0, 0)
+                        }
                     }
                 }
                 is Response.Error -> {
                     hideProgressBar()
-                    response.message?.let { message ->
-                        Toast.makeText(activity, "An error occurred: $message", Toast.LENGTH_LONG).show()
+                    response.msg?.let { message ->
+                        Toast.makeText(activity, "An error occurred: $message", Toast.LENGTH_LONG)
+                            .show()
                     }
                 }
                 is Response.Loading -> {
                     showProgressBar()
                 }
             }
-        })
+        }
 
         return binding.root
     }
@@ -128,12 +131,12 @@ class HomeFragment : Fragment() {
             val shouldPaginate = isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
 
             if(shouldPaginate){
+                Log.d("HomeFragment", "onScrolled: ")
                 viewModel.searchNews(binding.etSearch.text.toString())
                 isScrolling = false
+            } else {
+                binding.rvSearchNews.setPadding(0, 0, 0, 0)
             }
-//            else {
-//                binding.rvSearchNews.setPadding(0, 0, 0, 0)
-//            }
         }
     }
 
@@ -143,7 +146,31 @@ class HomeFragment : Fragment() {
                 val bundle = Bundle().apply {
                     putSerializable("article", item)
                 }
+                Intent(requireActivity(), NewsDetail::class.java).apply {
+                    putExtras(bundle)
+                }.also {
+                    startActivity(it)
+                }
+            }
 
+            override fun onBookmark(item: Article?, position: Int) {
+                item?.let { article ->
+                    if(article.isBookmarked) {
+                        viewModel.deleteArticle(article)
+                        Snackbar.make(binding.rvSearchNews, "News removed from bookmarks!", Snackbar.LENGTH_SHORT).apply {
+                            anchorView = binding.rvSearchNews
+                            show()
+                        }
+                    } else {
+                        viewModel.saveArticle(article)
+                        Snackbar.make(binding.rvSearchNews, "News bookmarked!", Snackbar.LENGTH_SHORT).apply {
+                            anchorView = binding.rvSearchNews
+                            show()
+                        }
+                    }
+                    article.isBookmarked = !article.isBookmarked
+                    adapter.notifyItemChanged(position)
+                }
             }
         })
         binding.rvSearchNews.adapter = adapter

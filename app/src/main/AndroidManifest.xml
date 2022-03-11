@@ -25,10 +25,15 @@
         </activity>
         <activity
             android:name=".ui.LogIn"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.NewsFirstApp.NoActionBar" />
         <activity
             android:name=".ui.MainActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.NewsDetail"
+            android:exported="false"
+            android:theme="@style/Theme.NewsFirstApp.NoActionBar" />
     </application>
 
 </manifest>

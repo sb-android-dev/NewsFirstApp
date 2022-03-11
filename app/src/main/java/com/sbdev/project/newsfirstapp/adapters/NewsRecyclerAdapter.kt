@@ -8,36 +8,50 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sbdev.project.newsfirstapp.Constants.Companion.DATE_FORMAT
 import com.sbdev.project.newsfirstapp.Constants.Companion.SERVER_DATE_FORMAT
+import com.sbdev.project.newsfirstapp.R
 import com.sbdev.project.newsfirstapp.data.entity.Article
 import com.sbdev.project.newsfirstapp.databinding.ItemNewsBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NewsRecyclerAdapter (private val listener: OnItemClickListener) :
+class NewsRecyclerAdapter(private val listener: OnItemClickListener) :
     ListAdapter<Article, NewsRecyclerAdapter.ArticleViewHolder>(DiffCallback()) {
 
-    companion object{
+    companion object {
         val df = SimpleDateFormat(DATE_FORMAT, Locale.ROOT)
         val sdf = SimpleDateFormat(SERVER_DATE_FORMAT, Locale.ROOT)
     }
 
     interface OnItemClickListener {
         fun onClick(item: Article?)
+        fun onBookmark(item: Article?, position: Int)
     }
 
     inner class ArticleViewHolder(private val binding: ItemNewsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bindView(item: Article?) {
-            Glide.with(binding.ivArticleImage).load(item!!.urlToImage).into(binding.ivArticleImage)
+            Glide.with(binding.ivArticleImage)
+                .load(item!!.urlToImage)
+                .placeholder(R.drawable.ic_logo)
+                .into(binding.ivArticleImage)
             binding.tvSource.text = item.source.name
             binding.tvTitle.text = item.title
             binding.tvDescription.text = item.description
             val date = sdf.parse(item.publishedAt)
             binding.tvPublishedAt.text = df.format(date!!)
 
+            if (item.isBookmarked)
+                binding.ivBookmark.setImageResource(R.drawable.ic_outline_bookmark_24)
+            else
+                binding.ivBookmark.setImageResource(R.drawable.ic_outline_bookmark_add_24)
+
             itemView.setOnClickListener {
                 listener.onClick(item)
+            }
+
+            binding.ivBookmark.setOnClickListener {
+                listener.onBookmark(item, adapterPosition)
             }
         }
 
