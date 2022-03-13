@@ -16,6 +16,7 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:src="@drawable/ic_logo"
+            app:tint="?colorOnSurface"
             android:layout_marginTop="64dp"
             android:transitionName="app_logo_transition"
             app:layout_constraintTop_toTopOf="parent"
@@ -64,10 +65,13 @@
 
         <TextView
             android:id="@+id/tvSignInWithGoogle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="56dp"
             android:padding="16dp"
+            android:gravity="center"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:text="Sign in with Google"
             android:clickable="true"
@@ -75,7 +79,89 @@
             android:background="?selectableItemBackground"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvSocialMediaSignInTitle"/>
+            app:layout_constraintTop_toBottomOf="@id/tvSocialMediaSignInTitle"
+            android:drawablePadding="8dp"
+            app:drawableStartCompat="@drawable/ic_google_icon" />
+
+        <TextView
+            android:id="@+id/tvSignInWithFacebook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="56dp"
+            android:padding="16dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:text="Sign in with Facebook"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvSignInWithGoogle"
+            android:drawablePadding="8dp"
+            app:drawableStartCompat="@drawable/ic_facebook_icon" />
+
+        <TextView
+            android:id="@+id/tvSignInWithTwitter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="56dp"
+            android:padding="16dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:text="Sign in with Twitter"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvSignInWithFacebook"
+            android:drawablePadding="8dp"
+            app:drawableStartCompat="@drawable/ic_twitter_icon" />
+
+        <TextView
+            android:id="@+id/tvSignInWithLinkedin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="56dp"
+            android:padding="16dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:text="Sign in with LinkedIn"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvSignInWithTwitter"
+            android:drawablePadding="8dp"
+            app:drawableStartCompat="@drawable/ic_linkedin_icon" />
+
+        <TextView
+            android:id="@+id/tvSignInWithGithub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="56dp"
+            android:padding="16dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:text="Sign in with GitHub"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvSignInWithLinkedin"
+            android:drawablePadding="8dp"
+            app:drawableStartCompat="@drawable/ic_github_icon" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -11,6 +11,7 @@
         android:id="@+id/ivAppLogo"
         android:layout_width="160dp"
         android:layout_height="160dp"
+        app:tint="?colorOnSurface"
         android:src="@drawable/ic_logo"
         android:transitionName="app_logo_transition"
         app:layout_constraintTop_toTopOf="parent"
